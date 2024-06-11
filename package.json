@@ -1,0 +1,21 @@
+{
+    "name": "compatibility-example",
+    "description": "A simple script showcasing how to use Tensors new SDKs with @solana/web3.js < v2.0.0",
+    "homepage": "https://github.com/tensor-foundation",
+    "repository": "https://github.com/tensor-foundation/compat-example.git",
+    "author": "Tensor Protocol Foundation <maintainers@tensor.foundation>",
+    "version": "1.0.0",
+    "license": "Apache-2.0",
+    "main": "main",
+    "dependencies": {
+        "@solana/compat": "^2.0.0-preview.3",
+        "@solana/web3.js": "^1.91.8",
+        "@tensor-foundation/escrow": "file:../escrow/clients/js",
+        "@tensor-foundation/compat-helpers": "file:../toolkit/compat-helpers",
+        "@types/bs58": "^4.0.4",
+        "bs58": "^5.0.0",
+        "dotenv": "^16.4.5",
+        "ts-node": "^10.9.2"
+    },
+    "packageManager": "pnpm@9.1.3"
+}

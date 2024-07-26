@@ -1,7 +1,7 @@
-# Integrating Tensors SDKs with `@solana/web3.js` < v2.0.0
+# Compatibility Example
 ## Getting Started
 This repository showcases how to integrate Tensor's new SDKs with web3.js-legacy (<v2.0.0). 
-The short example script will initialize a margin account for a wallet if it doesn't already exist and log the margin account details afterwards.
+The short example script in `main.ts` will initialize a margin account for a wallet if it doesn't already exist and log the margin account details afterwards.
 
 ### Install Dependencies
 To get started, clone this repository, navigate to it and install all dependencies with the package manager of your choice by running

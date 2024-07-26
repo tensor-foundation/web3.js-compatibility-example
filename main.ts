@@ -1,7 +1,7 @@
 import "dotenv/config";
-import { Connection, Keypair, PublicKey, Transaction, TransactionInstruction } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, Transaction, TransactionInstruction, TransactionConfirmationStrategy } from "@solana/web3.js";
 import { decode } from 'bs58';
-import { fromLegacyPublicKey } from '@solana/compat';
+import { fromLegacyKeypair, fromLegacyPublicKey } from '@solana/compat';
 import { MarginAccount, MarginAccountSeeds, fetchMarginAccount, findMarginAccountPda, getInitMarginAccountInstructionAsync } from '@tensor-foundation/escrow';
 import { fromConnectionToRpc, fromIInstructionToTransactionInstruction } from "@tensor-foundation/compat-helpers";
 
@@ -31,18 +31,18 @@ import { fromConnectionToRpc, fromIInstructionToTransactionInstruction } from "@
     // Check if margin account already exists via legacy RPC call
     const marginInfo = await conn.getAccountInfo(marginPda);
 
-    // If margin account doesn't exist, we initialize it via the escrow SDK (dependent on ^2.0.0)
+    // If margin account doesn't exist, we initialize it via the escrow SDK
     if (!marginInfo) {
 
         // To get the instruction to initialize the margin account, we need to provide the 
-        // owner argument as an Address, so we can once again make use of the helper
-        // function that converts a PublicKey to an Address
+        // owner argument as an KeyPairSigner, so we can  make use of the helper
+        // function that converts a Keypair (legacy) to a KeypairSigner (next)
         const initEscrowIx = await getInitMarginAccountInstructionAsync({
-            owner: fromLegacyPublicKey(walletKeypair.publicKey)
+            owner: fromLegacyKeypair(walletKeypair)
         });
 
-        // To send that instruction, we can use the normal legacy Transaction object by
-        // mapping the returned instruction of type IInstruction to a legacy TransactionInstruction
+        // To send that instruction, we can use the normal legacy Transaction object by mapping
+        // the returned instruction of type IInstruction to a legacy TransactionInstruction
         // with the helper function fromIInstructionToTransactionInstruction
         const legacyInitEscrowInstruction: TransactionInstruction = fromIInstructionToTransactionInstruction(initEscrowIx);
         const tx = new Transaction().add(legacyInitEscrowInstruction);
@@ -53,7 +53,7 @@ import { fromConnectionToRpc, fromIInstructionToTransactionInstruction } from "@
 
         // Send transaction 
         const signature = await conn.sendRawTransaction(tx.serialize());
-        const confirmation = await conn.confirmTransaction(signature);
+        const confirmation = await conn.confirmTransaction({signature: signature} as TransactionConfirmationStrategy);
         console.log(confirmation);
         if(confirmation.value.err){
             console.error('transaction failed with error:' + confirmation.value.err);

@@ -3,7 +3,7 @@ import { Connection, Keypair, PublicKey, Transaction, TransactionInstruction, Tr
 import { decode } from 'bs58';
 import { fromLegacyPublicKey } from '@solana/compat';
 import { MarginAccount, MarginAccountSeeds, fetchMarginAccount, findMarginAccountPda, getInitMarginAccountInstructionAsync } from '@tensor-foundation/escrow';
-import { fromConnectionToRpc, fromIInstructionToTransactionInstruction, fromLegacyKeypairToKeyPairSigner } from "@tensor-foundation/compat-helpers";
+import { fromConnectionToRpc, fromIInstructionToTransactionInstruction, fromLegacyKeypairToKeyPairSigner, fromPublicKeyToNoopSigner } from "@tensor-foundation/compat-helpers";
 
 (async () => {
     const PRIV_KEY = process.env.PRIVATE_KEY || "YOUR_BASE58_ENCODED_PRIVATE_KEY";
@@ -40,6 +40,15 @@ import { fromConnectionToRpc, fromIInstructionToTransactionInstruction, fromLega
         const initEscrowIx = await getInitMarginAccountInstructionAsync({
             owner: await fromLegacyKeypairToKeyPairSigner(walletKeypair)
         });
+
+        // Alternatively if you don't have the Private Key, but want to generate 
+        // the instruction with just a given PublicKey, you can use fromPublicKeyToNoopSigner
+        // - note that the resulting tx will still need to be signed by the owner
+        const alsoInitEscrowIx = await getInitMarginAccountInstructionAsync({
+            owner: fromPublicKeyToNoopSigner(walletKeypair.publicKey)
+        })
+
+        console.log(alsoInitEscrowIx);
 
         // To send that instruction, we can use the normal legacy Transaction object by mapping
         // the returned instruction of type IInstruction to a legacy TransactionInstruction

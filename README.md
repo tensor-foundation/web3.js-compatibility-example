@@ -29,6 +29,6 @@ If you see any new argument types required in our new SDKs, there is a simple wa
 |-|-|-|-|
 | Address/ProgramDerivedAddress | PublicKey | fromLegacyPublicKey(publickey) | new PublicKey(address) |
 | Rpc | Connection | fromConnectionToRpc(connection) | - |
-| KeyPairSigner/CryptoKeyPair/TransactionSigner | Keypair | fromLegacyKeypair(keypair) | - |
+| KeyPairSigner | Keypair | fromLegacyKeypairToKeyPairSigner(keypair) | - |
 | bigint | BN/Number | BigInt(number) | Number(bigint) |
 | IInstruction | TransactionInstruction | fromTransactionInstructionToIInstruction(transactionInstruction) | fromIInstructionToTransactionInstruction(iinstruction) |

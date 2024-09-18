@@ -1,9 +1,9 @@
 import "dotenv/config";
 import { Connection, Keypair, PublicKey, Transaction, TransactionInstruction, TransactionConfirmationStrategy } from "@solana/web3.js";
 import { decode } from 'bs58';
-import { fromLegacyKeypair, fromLegacyPublicKey } from '@solana/compat';
+import { fromLegacyPublicKey } from '@solana/compat';
 import { MarginAccount, MarginAccountSeeds, fetchMarginAccount, findMarginAccountPda, getInitMarginAccountInstructionAsync } from '@tensor-foundation/escrow';
-import { fromConnectionToRpc, fromIInstructionToTransactionInstruction } from "@tensor-foundation/compat-helpers";
+import { fromConnectionToRpc, fromIInstructionToTransactionInstruction, fromLegacyKeypairToKeyPairSigner } from "@tensor-foundation/compat-helpers";
 
 (async () => {
     const PRIV_KEY = process.env.PRIVATE_KEY || "YOUR_BASE58_ENCODED_PRIVATE_KEY";
@@ -38,7 +38,7 @@ import { fromConnectionToRpc, fromIInstructionToTransactionInstruction } from "@
         // owner argument as an KeyPairSigner, so we can  make use of the helper
         // function that converts a Keypair (legacy) to a KeypairSigner (next)
         const initEscrowIx = await getInitMarginAccountInstructionAsync({
-            owner: fromLegacyKeypair(walletKeypair)
+            owner: await fromLegacyKeypairToKeyPairSigner(walletKeypair)
         });
 
         // To send that instruction, we can use the normal legacy Transaction object by mapping
@@ -65,12 +65,12 @@ import { fromConnectionToRpc, fromIInstructionToTransactionInstruction } from "@
     // fetchMarginAccount wants an Rpc as argument, the equivalent of Rpc in legacy is Connection
     // so we use fromConnectionToRpc, imported from @tensor-foundation/compat-helpers
     // and an Address for the marginPda pubkey, for which we use fromLegacyPublicKey again
-    const marginAccount: MarginAccount = await fetchMarginAccount(
+    const marginAccount: MarginAccount = (await fetchMarginAccount(
         fromConnectionToRpc(conn),
         fromLegacyPublicKey(marginPda),
         {
             commitment: "confirmed",
         }
-    )
+    )).data
     console.log(marginAccount);
 })();

@@ -11,7 +11,7 @@
         "@solana/compat": "2.0.0-preview.3",
         "@solana/web3.js": "^1.91.8",
         "@tensor-foundation/escrow": "^0.1.0",
-        "@tensor-foundation/compat-helpers": "^0.1.0",
+        "@tensor-foundation/compat-helpers": "^0.2.1",
         "@types/bs58": "^4.0.4",
         "bs58": "^5.0.0",
         "dotenv": "^16.4.5",

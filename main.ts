@@ -48,8 +48,6 @@ import { fromConnectionToRpc, fromIInstructionToTransactionInstruction, fromLega
             owner: fromPublicKeyToNoopSigner(walletKeypair.publicKey)
         })
 
-        console.log(alsoInitEscrowIx);
-
         // To send that instruction, we can use the normal legacy Transaction object by mapping
         // the returned instruction of type IInstruction to a legacy TransactionInstruction
         // with the helper function fromIInstructionToTransactionInstruction
